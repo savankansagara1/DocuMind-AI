@@ -1,14 +1,17 @@
 import { indexTheDocument } from "../prepare.js";
 import { v4 as uuidv4 } from "uuid";
-import * as pdfParse from "pdf-parse";
+import { createRequire } from "module";
 import fs from "fs";
 import path from "path";
+
+const require = createRequire(import.meta.url);
+const pdfParse = require("pdf-parse"); // ✅ stable in Bun
 
 const MAX_PAGES = 100;
 
 export async function processPdf(buffer) {
   // ✅ Correct pdf-parse usage
-  const pdfData = await pdfParse.default(buffer);
+  const pdfData = await pdfParse(buffer);
 
   if (pdfData.numpages > MAX_PAGES) {
     throw new Error(
