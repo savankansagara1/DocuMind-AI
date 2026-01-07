@@ -4,7 +4,7 @@ import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { PineconeStore } from "@langchain/pinecone";
 import { Pinecone as PineconeClient } from "@pinecone-database/pinecone";
 import dotenv from "dotenv"
-import buffer from "buffer";
+
 
 
 dotenv.config();

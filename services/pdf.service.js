@@ -1,35 +1,27 @@
-import { createRequire } from "module";
 import { indexTheDocument } from "../prepare.js";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
 import path from "path";
-
-const require = createRequire(import.meta.url);
-
-// 🔥 FULL UNWRAP (Bun-safe)
-const pdfParseModule = require("pdf-parse");
-const pdfParse =
-  pdfParseModule?.default?.default ||
-  pdfParseModule?.default ||
-  pdfParseModule;
-
-if (typeof pdfParse !== "function") {
-  throw new Error("pdf-parse failed to load correctly");
-}
+import * as pdfjs from "pdfjs-dist/legacy/build/pdf.js";
 
 const MAX_PAGES = 100;
 
 export async function processPdf(buffer) {
-  const pdfData = await pdfParse(buffer);
+  // ✅ Load PDF from buffer
+  const loadingTask = pdfjs.getDocument({ data: buffer });
+  const pdf = await loadingTask.promise;
 
-  if (pdfData.numpages > MAX_PAGES) {
+  const numPages = pdf.numPages;
+
+  if (numPages > MAX_PAGES) {
     throw new Error(
-      `PDF has ${pdfData.numpages} pages. Maximum allowed is ${MAX_PAGES}.`
+      `PDF has ${numPages} pages. Maximum allowed is ${MAX_PAGES}.`
     );
   }
 
   const pdfId = uuidv4();
 
+  // Write buffer to temp file for LangChain
   const tempPath = path.join("uploads", `${pdfId}.pdf`);
   fs.writeFileSync(tempPath, buffer);
 
