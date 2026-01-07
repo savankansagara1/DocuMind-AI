@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { indexTheDocument } from "../prepare.js";
 
 const require = createRequire(import.meta.url);
-const pdfParse = require("pdf-parse"); // ✅ correct for Node ESM
+const pdfParse = require("pdf-parse").default; // ✅ FIXED
 
 const MAX_PAGES = 100;
 
