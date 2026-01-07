@@ -1,19 +1,25 @@
+import { createRequire } from "module";
 import { indexTheDocument } from "../prepare.js";
 import { v4 as uuidv4 } from "uuid";
-import { createRequire } from "module";
 import fs from "fs";
 import path from "path";
 
 const require = createRequire(import.meta.url);
 
-// ✅ IMPORTANT PART
+// 🔥 FULL UNWRAP (Bun-safe)
 const pdfParseModule = require("pdf-parse");
-const pdfParse = pdfParseModule.default || pdfParseModule;
+const pdfParse =
+  pdfParseModule?.default?.default ||
+  pdfParseModule?.default ||
+  pdfParseModule;
+
+if (typeof pdfParse !== "function") {
+  throw new Error("pdf-parse failed to load correctly");
+}
 
 const MAX_PAGES = 100;
 
 export async function processPdf(buffer) {
-  // ✅ Correct pdf-parse usage
   const pdfData = await pdfParse(buffer);
 
   if (pdfData.numpages > MAX_PAGES) {
@@ -24,14 +30,11 @@ export async function processPdf(buffer) {
 
   const pdfId = uuidv4();
 
-  // ✅ Write buffer to temp file
   const tempPath = path.join("uploads", `${pdfId}.pdf`);
   fs.writeFileSync(tempPath, buffer);
 
-  // ✅ Index using file path
   await indexTheDocument(tempPath, { pdfId });
 
-  // ✅ Cleanup
   fs.unlinkSync(tempPath);
 
   return pdfId;
