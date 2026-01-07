@@ -13,21 +13,25 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 // Multer config
-
+const storage = multer.diskStorage({
+  destination: uploadDir,
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
 
 const upload = multer({
-  storage: multer.memoryStorage(),
+  storage,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB
+    fileSize: 10 * 1024 * 1024, // 10 MB
   },
   fileFilter: (req, file, cb) => {
     if (file.mimetype !== "application/pdf") {
-      return cb(new Error("Only PDF files allowed"));
+      return cb(new Error("Only PDF files are allowed"));
     }
     cb(null, true);
   },
 });
-
 
 /**
  * POST /upload
@@ -35,26 +39,25 @@ const upload = multer({
  */
 router.post("/", upload.single("pdf"), async (req, res) => {
   try {
-      console.log("UPLOAD HIT");
     if (!req.file) {
       return res.status(400).json({ error: "PDF file is required" });
     }
-     console.log("FILE INFO:", {
-      name: req.file.originalname,
-      size: req.file.size,
-      mimetype: req.file.mimetype
-    });
 
-    const pdfId = await processPdf(req.file.buffer);
+    const filePath = path.resolve(req.file.path);
+
+    const pdfId = await processPdf(filePath);
 
     res.json({
       message: "PDF uploaded and indexed successfully",
       pdfId,
     });
-  }  catch (err) {
-    console.error("UPLOAD ERROR 👉", err);
-    res.status(400).json({ error: err.message });
-  }
+  } catch (error) {
+  console.error("PDF upload error:", error);
+
+  return res.status(400).json({
+    error: error.message,
+  });
+}
 });
 
 export default router;

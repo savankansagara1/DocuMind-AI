@@ -1,8 +1,15 @@
 {
-  "name": "documind-backend",
+  "name": ".",
+  "module": "index.js",
   "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
   "scripts": {
-    "start": "node server.js"
+    "start": "bun server.js"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
   },
   "dependencies": {
     "@langchain/community": "^1.1.1",
@@ -16,7 +23,6 @@
     "express": "^5.2.1",
     "groq-sdk": "^0.37.0",
     "multer": "^2.0.2",
-    "pdf-parse": "^2.4.5",
     "uuid": "^13.0.0"
   }
 }

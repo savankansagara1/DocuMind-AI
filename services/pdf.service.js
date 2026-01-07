@@ -1,37 +1,20 @@
-import { createRequire } from "module";
-import fs from "fs";
-import path from "path";
-import { v4 as uuidv4 } from "uuid";
 import { indexTheDocument } from "../prepare.js";
+import { v4 as uuidv4 } from "uuid";
+import path from "path";
 
-const require = createRequire(import.meta.url);
-const pdfParse = require("pdf-parse").default; // ✅ FIXED
-
-const MAX_PAGES = 100;
-
-export async function processPdf(buffer) {
-  // Parse PDF
-  const pdfData = await pdfParse(buffer);
-
-  if (pdfData.numpages > MAX_PAGES) {
-    throw new Error(
-      `PDF has ${pdfData.numpages} pages. Maximum allowed is ${MAX_PAGES}.`
-    );
-  }
-
+/**
+ * Handles PDF indexing
+ * Returns a unique pdfId
+ */
+export async function processPdf(filePath) {
+  // Generate unique ID for this PDF
   const pdfId = uuidv4();
 
-  // Ensure uploads folder exists
-  if (!fs.existsSync("uploads")) {
-    fs.mkdirSync("uploads");
-  }
-
-  const tempPath = path.join("uploads", `${pdfId}.pdf`);
-  fs.writeFileSync(tempPath, buffer);
-
-  await indexTheDocument(tempPath, { pdfId });
-
-  fs.unlinkSync(tempPath);
+  // Index PDF with metadata
+  await indexTheDocument(filePath, {
+    pdfId,
+    type: "user-upload",
+  });
 
   return pdfId;
 }
