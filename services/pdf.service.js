@@ -2,12 +2,12 @@ import { indexTheDocument } from "../prepare.js";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
 import path from "path";
-import * as pdfjs from "pdfjs-dist/legacy/build/pdf.js";
+import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
 
 const MAX_PAGES = 100;
 
 export async function processPdf(buffer) {
-  // ✅ Load PDF from buffer
+  // Load PDF from buffer
   const loadingTask = pdfjs.getDocument({ data: buffer });
   const pdf = await loadingTask.promise;
 
