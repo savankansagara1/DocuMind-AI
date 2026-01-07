@@ -1,15 +1,15 @@
 import { indexTheDocument } from "../prepare.js";
 import { v4 as uuidv4 } from "uuid";
 import * as pdfParse from "pdf-parse";
+import fs from "fs";
+import path from "path";
 
 const MAX_PAGES = 100;
 
 export async function processPdf(buffer) {
+  // ✅ Correct pdf-parse usage
+  const pdfData = await pdfParse.default(buffer);
 
-  // Parse PDF from memory
-  const pdfData = await pdfParse(buffer);
-
-  // 🚫 Page limit check
   if (pdfData.numpages > MAX_PAGES) {
     throw new Error(
       `PDF has ${pdfData.numpages} pages. Maximum allowed is ${MAX_PAGES}.`
@@ -18,10 +18,15 @@ export async function processPdf(buffer) {
 
   const pdfId = uuidv4();
 
-  // Index using namespace (IMPORTANT)
-  await indexTheDocument(buffer, {
-    pdfId,
-  });
+  // ✅ Write buffer to temp file
+  const tempPath = path.join("uploads", `${pdfId}.pdf`);
+  fs.writeFileSync(tempPath, buffer);
+
+  // ✅ Index using file path
+  await indexTheDocument(tempPath, { pdfId });
+
+  // ✅ Cleanup
+  fs.unlinkSync(tempPath);
 
   return pdfId;
 }
