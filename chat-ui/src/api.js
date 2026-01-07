@@ -1,4 +1,4 @@
-const BASE_URL = "https://documind-ai-y196.onrender.com/";
+const BASE_URL = "https://documind-ai-y196.onrender.com";
 
 export async function uploadPdf(file) {
   const formData = new FormData();
