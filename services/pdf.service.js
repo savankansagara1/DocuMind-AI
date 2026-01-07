@@ -5,7 +5,10 @@ import fs from "fs";
 import path from "path";
 
 const require = createRequire(import.meta.url);
-const pdfParse = require("pdf-parse"); // ✅ stable in Bun
+
+// ✅ IMPORTANT PART
+const pdfParseModule = require("pdf-parse");
+const pdfParse = pdfParseModule.default || pdfParseModule;
 
 const MAX_PAGES = 100;
 
