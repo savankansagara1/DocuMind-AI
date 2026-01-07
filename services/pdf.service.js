@@ -1,16 +1,13 @@
 import { indexTheDocument } from "../prepare.js";
 import { v4 as uuidv4 } from "uuid";
-import fs from "fs";
 import * as pdfParse from "pdf-parse";
 
 const MAX_PAGES = 100;
 
-export async function processPdf(filePath) {
-  // Read file
-  const dataBuffer = fs.readFileSync(filePath);
+export async function processPdf(buffer) {
 
-  // Parse PDF
-  const pdfData = await pdfParse(dataBuffer);
+  // Parse PDF from memory
+  const pdfData = await pdfParse(buffer);
 
   // 🚫 Page limit check
   if (pdfData.numpages > MAX_PAGES) {
@@ -22,7 +19,7 @@ export async function processPdf(filePath) {
   const pdfId = uuidv4();
 
   // Index using namespace (IMPORTANT)
-  await indexTheDocument(filePath, {
+  await indexTheDocument(buffer, {
     pdfId,
   });
 

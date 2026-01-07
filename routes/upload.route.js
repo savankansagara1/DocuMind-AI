@@ -13,25 +13,21 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 // Multer config
-const storage = multer.diskStorage({
-  destination: uploadDir,
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
-});
+
 
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10 MB
+    fileSize: 10 * 1024 * 1024, // 10MB
   },
   fileFilter: (req, file, cb) => {
     if (file.mimetype !== "application/pdf") {
-      return cb(new Error("Only PDF files are allowed"));
+      return cb(new Error("Only PDF files allowed"));
     }
     cb(null, true);
   },
 });
+
 
 /**
  * POST /upload
@@ -43,9 +39,7 @@ router.post("/", upload.single("pdf"), async (req, res) => {
       return res.status(400).json({ error: "PDF file is required" });
     }
 
-    const filePath = path.resolve(req.file.path);
-
-    const pdfId = await processPdf(filePath);
+    const pdfId = await processPdf(req.file.buffer);
 
     res.json({
       message: "PDF uploaded and indexed successfully",
