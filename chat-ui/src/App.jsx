@@ -229,7 +229,7 @@ export default function App() {
 
     try {
       const res = await sendMessage(currentInput, pdfId, sessionId);
-console.log(sessionId)
+
       setMessages((prev) => [
         ...prev,
         {
