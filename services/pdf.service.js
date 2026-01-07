@@ -1,7 +1,7 @@
 import { indexTheDocument } from "../prepare.js";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
-import pdfParse from "pdf-parse";
+import * as pdfParse from "pdf-parse";
 
 const MAX_PAGES = 100;
 
