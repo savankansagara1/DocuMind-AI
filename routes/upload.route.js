@@ -35,9 +35,15 @@ const upload = multer({
  */
 router.post("/", upload.single("pdf"), async (req, res) => {
   try {
+      console.log("UPLOAD HIT");
     if (!req.file) {
       return res.status(400).json({ error: "PDF file is required" });
     }
+     console.log("FILE INFO:", {
+      name: req.file.originalname,
+      size: req.file.size,
+      mimetype: req.file.mimetype
+    });
 
     const pdfId = await processPdf(req.file.buffer);
 
@@ -45,13 +51,10 @@ router.post("/", upload.single("pdf"), async (req, res) => {
       message: "PDF uploaded and indexed successfully",
       pdfId,
     });
-  } catch (error) {
-  console.error("PDF upload error:", error);
-
-  return res.status(400).json({
-    error: error.message,
-  });
-}
+  }  catch (err) {
+    console.error("UPLOAD ERROR 👉", err);
+    res.status(400).json({ error: err.message });
+  }
 });
 
 export default router;
