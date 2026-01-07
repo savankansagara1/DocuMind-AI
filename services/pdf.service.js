@@ -1,8 +1,11 @@
-import pdfParse from "pdf-parse";
+import { createRequire } from "module";
 import fs from "fs";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import { indexTheDocument } from "../prepare.js";
+
+const require = createRequire(import.meta.url);
+const pdfParse = require("pdf-parse"); // ✅ correct for Node ESM
 
 const MAX_PAGES = 100;
 
@@ -18,7 +21,11 @@ export async function processPdf(buffer) {
 
   const pdfId = uuidv4();
 
-  // Write temp file (LangChain needs path)
+  // Ensure uploads folder exists
+  if (!fs.existsSync("uploads")) {
+    fs.mkdirSync("uploads");
+  }
+
   const tempPath = path.join("uploads", `${pdfId}.pdf`);
   fs.writeFileSync(tempPath, buffer);
 
