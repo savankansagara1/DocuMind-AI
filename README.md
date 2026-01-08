@@ -229,27 +229,9 @@ npm run dev
 🧑‍💻 Author
 ------------
 
-**Savan Kansagara**Aspiring Software Engineer | GenAI & Full-Stack Developer
+**Savan Kansagara** GenAI & Full-Stack Developer
 
 *   GitHub: [https://github.com/savankansagara1](https://github.com/savankansagara1)
     
 *   LinkedIn: [https://www.linkedin.com/in/savan-kansagara/](https://www.linkedin.com/in/savan-kansagara/)
     
-
-🏆 Why This Project Matters
----------------------------
-
-DocuMind AI is not just a ordinary project.It demonstrates:
-
-*   Real-world **RAG architecture**
-    
-*   Production debugging & rollback skills
-    
-*   Cloud deployment experience
-    
-*   Clean separation of frontend & backend
-    
-*   Strong understanding of LLM limitations and design
-    
-
-This project reflects **industry-ready engineering practices**.
