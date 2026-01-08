@@ -212,7 +212,7 @@ npm run dev
 *   Optimized for correctness before optimization
     
 
-📈 Future Enhancements (Optional Roadmap)
+📈 Future Possible Enhancements 
 -----------------------------------------
 
 *   User authentication (JWT / OAuth)
