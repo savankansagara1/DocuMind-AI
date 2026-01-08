@@ -3,9 +3,7 @@ import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { PineconeStore } from "@langchain/pinecone";
 import { Pinecone as PineconeClient } from "@pinecone-database/pinecone";
-import dotenv from "dotenv"
-
-
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -26,13 +24,9 @@ export const vectorStore = new PineconeStore(embeddings, {
   maxConcurrency: 5,
 });
 
-export async function indexTheDocument(input, extraMetadata = {}) {
-   if (!input) {
-    throw new Error("PDF input is required");
-  }
-  
+export async function indexTheDocument(filePath, extraMetadata = {}) {
   //Load the PDF
-  const loader = new PDFLoader(input, {
+  const loader = new PDFLoader(filePath, {
     splitPages: false,
   });
   const doc = await loader.load();

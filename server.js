@@ -12,11 +12,13 @@ const app = express();
 // Middlewares
 app.use(cors({ origin: "*" }));
 
+app.use("/upload", uploadRoutes); 
+
 app.use(express.json());
 
 // Routes
 app.use("/chat", chatRoutes);
-app.use("/upload", uploadRoutes);
+
 
 
 // Health check
